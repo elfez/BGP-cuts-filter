@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         BGP Table Fixer
+// @name         BGP Price Cut Table Fixer
 // @namespace    http://crashpr.one
-// @version      0.1
-// @description  try to take over the world!
+// @version      0.2
+// @description  Sorts price cut list by date and removes all non-GB entries (see line 34 to mod)
 // @author       You
 // @match        https://boardgameprices.co.uk/item/pricedrops
+// @match        https://boardgameprices.co.uk/item/pricedrops/*
 // @grant        none
 // ==/UserScript==
 
