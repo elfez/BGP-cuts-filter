@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BGP Price Cut Table Fixer
 // @namespace    http://crashpr.one
-// @version      0.3
+// @version      0.4
 // @description  Sorts price cut list by date and removes all non-GB entries (see line 34 to mod)
 // @author       You
 // @match        https://boardgameprices.co.uk/item/pricedrops
@@ -16,7 +16,11 @@
 
     // List of strings (quoted, in lowercase) to filter out from results
     // Example: filterWords = [ "arkham", "star wars", "lord of the rings" ];
-    var filterWords = []
+    var filterWords = [ ];
+
+    // List of stores (quoted, in lowercase) that are to filter out from results
+    // Example filterStores = [ "store one", "store two" ];
+    var filterStores = [ ];
 
     // List of country codes (quoted, in lowercase) that are to be included
     // Example: [ "fr", "de" ];
@@ -26,6 +30,7 @@
     var topdiv, i, s, spans, gparent;
     var todelete = [];
     var flag = "";
+    var store = "";
     var itemName = "";
 
     // Delete nodes and div before and after
@@ -39,19 +44,28 @@
         }
     }
 
-
     topdiv = document.getElementById("searchresultlist");
 
-    // Delete non requested stores...
+    // Delete non requested entries...
 
-    // Find nodes to delete based on country
+    // Find nodes to delete based on country or store
     spans = topdiv.getElementsByClassName("storename");
     for (i=0; i < spans.length ; i++) {
         // Grotty way to get the country code for the store
         flag = spans[i].children[0].src.substr(-6, 2).toLowerCase();
+        store = spans[i].textContent.toLowerCase();
         if (countries.indexOf(flag) === -1) {
             gparent = spans[i].parentNode.parentNode;
             todelete.push(gparent);
+            continue;
+        } else if (filterStores.length > 0 ) {
+            for (s=0; s < filterStores.length; s++) {
+                if (store.includes(filterStores[s])) {
+                    gparent = spans[i].parentNode.parentNode;
+                    todelete.push(gparent);
+                    break;
+                }
+            }
         }
     }
     deleteLines(todelete, topdiv);
